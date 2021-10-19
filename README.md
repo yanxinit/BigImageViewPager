@@ -1,7 +1,7 @@
 ### BigImage + ImageView + ViewPager = BigImageViewPager
 
 一个图片浏览器，支持超大图、超长图、支持手势放大、支持查看原图、下载、加载百分比进度显示。采用区块复用加载，优化内存占用，有效避免OOM。支持手势下拉退出。
-### 注意：本框架支持网络图片、本地图片、支持gif动图、支持Android 11。
+### 注意：本框架支持网络图片、本地图片、支持gif动图、支持Android 12。
 ### 后续可能会仅维护androidx版本，support请尽快迁移到androidx。参考官方迁移文档：https://developer.android.google.cn/jetpack/androidx/migrate
 
 # 框架特性
@@ -20,22 +20,8 @@
 - 针对保存图片进行优化，文件扩展名使用文件头部Mime信息进行设置，不用担心gif保存成jpeg；
 - 支持自定义查看原图时的百分比View；
 - 支持BMP格式的图片；
-- 支持Android 11；
-
-# 截图
-
-# 强烈推荐推荐扫描二维码进行安装体验：
-![扫码下载demo](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e50f06781ec248629b72d597183f5d2a~tplv-k3u1fbpfcp-watermark.image)
-
-![kpFnSO.gif](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bfd23ce0042e431bb200d7e5e2fca87d~tplv-k3u1fbpfcp-zoom-1.image)
-
-| 说明 | 截图 |
-| ------------ | ------------ |
-|主要功能|![](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a045eaa577834b00a345b409b81826f8~tplv-k3u1fbpfcp-watermark.image)|
-|预览界面|![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a0a1125f397b46619c9beea59691eaf5~tplv-k3u1fbpfcp-watermark.image)|
-|下拉关闭|![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/414c415380f742c4918c4b705ffc2f4f~tplv-k3u1fbpfcp-watermark.image)|
-|查看原图|![](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ffb4cfcbaecf43488d7ae671c7c02d3d~tplv-k3u1fbpfcp-watermark.image)|
-
+- 支持Android 12；
+- 支持自定义GlideUrl，对于变化的url也不用担心了；
 
 # 用法
 ### 一、添加依赖
@@ -84,7 +70,7 @@ dependencies {
 }
 ```
 
-#### Step 3. 在您的主module里，添加自定义AppGlideModule。您需要继承AppGlideModule并添加以下代码到对应的重载方法中，例如：
+#### Step 3. 在你的主module里，添加自定义AppGlideModule。你需要继承AppGlideModule并添加以下代码到对应的重载方法中，例如：
 ```
 @GlideModule
 public class MyAppGlideModule extends AppGlideModule {
@@ -93,7 +79,7 @@ public class MyAppGlideModule extends AppGlideModule {
     super.registerComponents(context, glide, registry);
 
     // 替换底层网络框架为okhttp3，这步很重要！如果不添加会无法正常显示原图的加载百分比，或者卡在1%
-    // 如果您的app中已经存在了自定义的GlideModule，您只需要把这一行代码，添加到对应的重载方法中即可。
+    // 如果你的app中已经存在了自定义的GlideModule，你只需要把这一行代码，添加到对应的重载方法中即可。
     registry.replace(GlideUrl.class, InputStream.class, new OkHttpUrlLoader.Factory(ProgressManager.getOkHttpClient()));
   }
 }
@@ -182,6 +168,7 @@ public class MyAppGlideModule extends AppGlideModule {
 |setIndicatorShapeResId|设置顶部指示器背景shape|默认自带灰色圆角shape，设置为0时不显示背景|
 |setShowErrorToast|设置是否显示加载失败的Toast|默认false，不显示|
 |setZoomTransitionDuration|设置图片缩放动画时长|默认200ms|
+|setCustomGlideUrlClzPath|设置自定义key计算的类路径|默认GlideUrl.class|
 |start|开启看图|最后调用|
 
 ##### 3：自定义多种配置：
@@ -221,8 +208,18 @@ public class MyAppGlideModule extends AppGlideModule {
 1.查看原图卡在1%？
 答：请仔细查看以上第三步的操作。
 
-# DEMO体验
-![扫码下载demo](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0bc6607b402b4d0d9837fa44291cae43~tplv-k3u1fbpfcp-zoom-1.image)
+# 推荐扫描二维码进行安装体验：
+![扫码下载demo](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e50f06781ec248629b72d597183f5d2a~tplv-k3u1fbpfcp-watermark.image)
+
+![kpFnSO.gif](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bfd23ce0042e431bb200d7e5e2fca87d~tplv-k3u1fbpfcp-zoom-1.image)
+
+
+| 说明 | 截图 |
+| ------------ | ------------ |
+|主要功能|![](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a045eaa577834b00a345b409b81826f8~tplv-k3u1fbpfcp-watermark.image)|
+|预览界面|![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a0a1125f397b46619c9beea59691eaf5~tplv-k3u1fbpfcp-watermark.image)|
+|下拉关闭|![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/414c415380f742c4918c4b705ffc2f4f~tplv-k3u1fbpfcp-watermark.image)|
+|查看原图|![](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ffb4cfcbaecf43488d7ae671c7c02d3d~tplv-k3u1fbpfcp-watermark.image)|
 
 # GitHub源码
 https://github.com/SherlockGougou/BigImageViewPager
@@ -232,10 +229,8 @@ https://github.com/SherlockGougou/BigImageViewPager
 对原作感兴趣的，可以去研究学习 ---> [传送门点我](https://github.com/davemorrissey/subsampling-scale-image-view)
 - okhttp 进度监听部分代码，借鉴使用了[GlideImageView](https://github.com/sunfusheng/GlideImageView)，在此对其表示感谢，喜欢其作品的可以移步去查看学习
 
-# Bug反馈、增加需求，加 QQ 交流群：271127803（大话安卓）
-### 欢迎加入“大话安卓”技术交流群，一起分享，共同进步##
-
-![欢迎加入“大话安卓”技术交流群，互相学习提升](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/516d83214bcd4db48e9b40798a945758~tplv-k3u1fbpfcp-zoom-1.image)
+# Bug反馈、增加需求，加 QQ 交流群
+![欢迎加入官方技术交流群，互相学习提升](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/17de72a7d15445f3b9a9591647af3c9b~tplv-k3u1fbpfcp-watermark.image)
 
 # LICENSE
 ```
